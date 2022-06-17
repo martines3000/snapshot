@@ -47,6 +47,7 @@ export function useClient() {
           payload
         );
       }
+      // FIXME: Add VP here ? ?
       return await sendEIP712(space, type, payload);
     } catch (e: any) {
       const errorMessage =
@@ -78,11 +79,14 @@ export function useClient() {
         plugins: JSON.stringify(plugins)
       });
     } else if (type === 'vote') {
+      // FIXME: Add VP here ? ?
+      // FIXME: Will there be a problem signing data with currently defined types ?
       return clientEIP712.vote(auth.web3, web3.value.account, {
         space: space.id,
         proposal: payload.proposal.id,
         type: payload.proposal.type,
         choice: payload.choice
+        // vp: payload.vp
       });
     } else if (type === 'delete-proposal') {
       return clientEIP712.cancelProposal(auth.web3, web3.value.account, {

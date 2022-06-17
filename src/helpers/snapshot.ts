@@ -110,6 +110,10 @@ export async function getPower(space, address, proposal) {
     parseInt(proposal.snapshot),
     import.meta.env.VITE_SCORES_URL + '/api/scores'
   );
+
+  console.log(strategies);
+  console.log(scores);
+
   const scoresByStrategy = strategies.map(
     (strategy, i) => scores[i][address] || 0
   );

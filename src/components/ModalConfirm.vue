@@ -8,6 +8,9 @@ import { getPower } from '@/helpers/snapshot';
 import { useWeb3 } from '@/composables/useWeb3';
 import pending from '@/helpers/pending.json';
 
+// FIXME: MAYBE PUT SOMEWHERE ELSE
+const SNAP_ID = 'npm:@blockchain-lab-um/ssi-snap';
+
 const { web3Account } = useWeb3();
 
 const vp = ref(0);
@@ -38,9 +41,29 @@ const symbols = computed(() =>
 );
 
 async function handleSubmit() {
+  // const res = await window.ethereum.request({
+  //   method: 'wallet_invokeSnap',
+  //   params: [
+  //     SNAP_ID,
+  //     {
+  //       method: 'getVP',
+  //       params: [
+  //         0,
+  //         'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d',
+  //         123
+  //       ]
+  //     }
+  //   ]
+  // });
+
+  // console.log(res);
+  // const vp = res.data;
+
+  // FIXME: ADD VP
   const result = await send(props.space, 'vote', {
     proposal: props.proposal,
     choice: props.selectedChoices
+    // VP: ...
   });
   console.log('Result', result);
   if (result.id) {
