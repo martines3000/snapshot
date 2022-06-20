@@ -19,6 +19,7 @@ export const VOTES_QUERY = gql`
       ipfs
       voter
       choice
+      metadata
       vp
       vp_by_strategy
     }
