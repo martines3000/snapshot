@@ -1,4 +1,3 @@
-import { getScores } from '@snapshot-labs/snapshot.js/src/utils';
 import voting from '@snapshot-labs/snapshot.js/src/voting';
 import { apolloClient } from '@/helpers/apollo';
 import { PROPOSAL_QUERY, VOTES_QUERY } from '@/helpers/queries';
@@ -61,6 +60,7 @@ export async function getProposal(id) {
 export async function getResults(space, proposal, votes) {
   console.log('[score] getResults');
   const voters = votes.map(vote => vote.voter);
+  const vps = votes.map(vote => vote.vps);
   const strategies = proposal.strategies ?? space.strategies;
   /* Get scores */
   if (proposal.state !== 'pending') {
@@ -70,6 +70,7 @@ export async function getResults(space, proposal, votes) {
       strategies,
       proposal.network,
       voters,
+      vps,
       parseInt(proposal.snapshot),
       import.meta.env.VITE_SCORES_URL + '/api/scores'
     );
@@ -99,7 +100,7 @@ export async function getResults(space, proposal, votes) {
   return { votes, results };
 }
 
-export async function getPower(space, address, proposal) {
+export async function getPower(space, address, proposal, vp) {
   console.log('[score] getPower');
   const strategies = proposal.strategies ?? space.strategies;
   const scores: any = await getScores(
@@ -107,11 +108,12 @@ export async function getPower(space, address, proposal) {
     strategies,
     proposal.network,
     [address],
+    [vp],
     parseInt(proposal.snapshot),
     import.meta.env.VITE_SCORES_URL + '/api/scores'
   );
 
-  console.log(strategies);
+  console.log('scores:');
   console.log(scores);
 
   const scoresByStrategy = strategies.map(
@@ -122,4 +124,36 @@ export async function getPower(space, address, proposal) {
     scoresByStrategy,
     totalScore: scoresByStrategy.reduce((a, b: any) => a + b, 0)
   };
+}
+
+// FIXME: Changed fucntion from snapshot.js library
+export async function getScores(
+  space: string,
+  strategies: any[],
+  network: string,
+  addresses: string[],
+  vps: any[],
+  snapshot: number | string = 'latest',
+  scoreApiUrl = 'https://score.snapshot.org/api/scores'
+) {
+  try {
+    const params = {
+      space,
+      network,
+      snapshot,
+      strategies,
+      addresses,
+      vps
+    };
+    console.log(params);
+    const res = await fetch(scoreApiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ params })
+    });
+    const obj = await res.json();
+    return obj.result.scores;
+  } catch (e) {
+    return Promise.reject(e);
+  }
 }

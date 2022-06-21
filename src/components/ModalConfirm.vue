@@ -7,9 +7,12 @@ import { useIntl } from '@/composables/useIntl';
 import { getPower } from '@/helpers/snapshot';
 import { useWeb3 } from '@/composables/useWeb3';
 import pending from '@/helpers/pending.json';
-
-// FIXME: MAYBE PUT SOMEWHERE ELSE
-const SNAP_ID = 'npm:@blockchain-lab-um/ssi-snap';
+import {
+  isSnapInstalled,
+  installSnap,
+  getVCs,
+  getVP
+} from '@/helpers/ssi-snap';
 
 const { web3Account } = useWeb3();
 
@@ -41,33 +44,95 @@ const symbols = computed(() =>
 );
 
 const demoVP = {
-  vc: {
-    credentialSchema: {
-      id: 'https://beta.api.schemas.serto.id/v1/public/program-completion-certificate/1.0/json-schema.json',
-      type: 'JsonSchemaValidator2018'
-    }
-  },
-  credentialSubject: {
-    accomplishmentType: 'Developer Certificate',
-    name: 'a',
-    achievement: 'Certified Solidity Developer 2',
-    courseProvider: 'UM FERI',
-    id: 'did:ethr:rinkeby:0x6A24687621cDD1C77Bb6aCbBEE910d0C517eB443'
-  },
-  issuer: {
-    id: 'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d'
-  },
-  type: ['VerifiableCredential', 'ProgramCompletionCertificate'],
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    'https://beta.api.schemas.serto.id/v1/public/program-completion-certificate/1.0/ld-context.json'
+  holder: 'did:ethr:0x4:0x451b2d7be6740584643bf06b2144555fb841a589',
+  type: ['VerifiablePresentation', 'Custom'],
+  verifiableCredential: [
+    'eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vYmV0YS5hcGkuc2NoZW1hcy5zZXJ0by5pZC92MS9wdWJsaWMvcHJvZ3JhbS1jb21wbGV0aW9uLWNlcnRpZmljYXRlLzEuMC9sZC1jb250ZXh0Lmpzb24iXSwidHlwZSI6WyJWZXJpZmlhYmxlQ3JlZGVudGlhbCIsIlByb2dyYW1Db21wbGV0aW9uQ2VydGlmaWNhdGUiXSwiY3JlZGVudGlhbFN1YmplY3QiOnsiYWNjb21wbGlzaG1lbnRUeXBlIjoiRGV2ZWxvcGVyIENlcnRpZmljYXRlIiwibmFtZSI6ImEiLCJhY2hpZXZlbWVudCI6IkNlcnRpZmllZCBTb2xpZGl0eSBEZXZlbG9wZXIgMiIsImNvdXJzZVByb3ZpZGVyIjoiVU0gRkVSSSJ9LCJjcmVkZW50aWFsU2NoZW1hIjp7ImlkIjoiaHR0cHM6Ly9iZXRhLmFwaS5zY2hlbWFzLnNlcnRvLmlkL3YxL3B1YmxpYy9wcm9ncmFtLWNvbXBsZXRpb24tY2VydGlmaWNhdGUvMS4wL2pzb24tc2NoZW1hLmpzb24iLCJ0eXBlIjoiSnNvblNjaGVtYVZhbGlkYXRvcjIwMTgifX0sInN1YiI6ImRpZDpldGhyOnJpbmtlYnk6MHg2QTI0Njg3NjIxY0REMUM3N0JiNmFDYkJFRTkxMGQwQzUxN2VCNDQzIiwibmJmIjoxNjUyNDQzNjkwLCJpc3MiOiJkaWQ6ZXRocjpyaW5rZWJ5OjB4MDI0MWFiZDY2MmRhMDZkMGFmMmYwMTUyYTgwYmMwMzdmNjVhN2Y5MDExNjBjZmUxZWIzNWVmM2YwYzUzMmEyYTRkIn0.Z4q7kn4vKdFI5QfAyQmqtWa0icAv91HqxSEwn-AMr4_bY3vfD_WeD3W9hgqf9tsUJPx2ru5gY3tLpAx04nk0RQ'
   ],
-  issuanceDate: '2022-05-13T12:08:10.000Z',
+  '@context': ['https://www.w3.org/2018/credentials/v1'],
+  issuanceDate: '2022-06-21T07:43:27.907Z',
   proof: {
-    type: 'JwtProof2020',
-    jwt: 'eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vYmV0YS5hcGkuc2NoZW1hcy5zZXJ0by5pZC92MS9wdWJsaWMvcHJvZ3JhbS1jb21wbGV0aW9uLWNlcnRpZmljYXRlLzEuMC9sZC1jb250ZXh0Lmpzb24iXSwidHlwZSI6WyJWZXJpZmlhYmxlQ3JlZGVudGlhbCIsIlByb2dyYW1Db21wbGV0aW9uQ2VydGlmaWNhdGUiXSwiY3JlZGVudGlhbFN1YmplY3QiOnsiYWNjb21wbGlzaG1lbnRUeXBlIjoiRGV2ZWxvcGVyIENlcnRpZmljYXRlIiwibmFtZSI6ImEiLCJhY2hpZXZlbWVudCI6IkNlcnRpZmllZCBTb2xpZGl0eSBEZXZlbG9wZXIgMiIsImNvdXJzZVByb3ZpZGVyIjoiVU0gRkVSSSJ9LCJjcmVkZW50aWFsU2NoZW1hIjp7ImlkIjoiaHR0cHM6Ly9iZXRhLmFwaS5zY2hlbWFzLnNlcnRvLmlkL3YxL3B1YmxpYy9wcm9ncmFtLWNvbXBsZXRpb24tY2VydGlmaWNhdGUvMS4wL2pzb24tc2NoZW1hLmpzb24iLCJ0eXBlIjoiSnNvblNjaGVtYVZhbGlkYXRvcjIwMTgifX0sInN1YiI6ImRpZDpldGhyOnJpbmtlYnk6MHg2QTI0Njg3NjIxY0REMUM3N0JiNmFDYkJFRTkxMGQwQzUxN2VCNDQzIiwibmJmIjoxNjUyNDQzNjkwLCJpc3MiOiJkaWQ6ZXRocjpyaW5rZWJ5OjB4MDI0MWFiZDY2MmRhMDZkMGFmMmYwMTUyYTgwYmMwMzdmNjVhN2Y5MDExNjBjZmUxZWIzNWVmM2YwYzUzMmEyYTRkIn0.Z4q7kn4vKdFI5QfAyQmqtWa0icAv91HqxSEwn-AMr4_bY3vfD_WeD3W9hgqf9tsUJPx2ru5gY3tLpAx04nk0RQ'
+    verificationMethod:
+      'did:ethr:0x4:0x451b2d7be6740584643bf06b2144555fb841a589#controller',
+    created: '2022-06-21T07:43:27.907Z',
+    proofPurpose: 'assertionMethod',
+    type: 'EthereumEip712Signature2021',
+    proofValue:
+      '0x23c70a0de8e4e1996507c12f232e1fa1edd12bba7f4199af3e824d5fc54b97ea3dbbf4cf61921b474838e60575f24fb4a9da351d5434d788ad53d3d9615d5bb61c',
+    eip712: {
+      domain: {
+        chainId: 4,
+        name: 'VerifiablePresentation',
+        version: '1'
+      },
+      messageSchema: {
+        EIP712Domain: [
+          {
+            name: 'name',
+            type: 'string'
+          },
+          {
+            name: 'version',
+            type: 'string'
+          },
+          {
+            name: 'chainId',
+            type: 'uint256'
+          }
+        ],
+        Proof: [
+          {
+            name: 'created',
+            type: 'string'
+          },
+          {
+            name: 'proofPurpose',
+            type: 'string'
+          },
+          {
+            name: 'type',
+            type: 'string'
+          },
+          {
+            name: 'verificationMethod',
+            type: 'string'
+          }
+        ],
+        VerifiablePresentation: [
+          {
+            name: '@context',
+            type: 'string[]'
+          },
+          {
+            name: 'holder',
+            type: 'string'
+          },
+          {
+            name: 'issuanceDate',
+            type: 'string'
+          },
+          {
+            name: 'proof',
+            type: 'Proof'
+          },
+          {
+            name: 'type',
+            type: 'string[]'
+          },
+          {
+            name: 'verifiableCredential',
+            type: 'string[]'
+          }
+        ]
+      },
+      primaryType: 'VerifiablePresentation'
+    }
   }
 };
+
+const vcs = ref([]);
+const selectedVC = ref(null);
+const generatedVP = ref(null);
 
 async function handleSubmit() {
   // const res = await window.ethereum.request({
@@ -78,7 +143,7 @@ async function handleSubmit() {
   //       method: 'getVP',
   //       params: [
   //         0,
-  //         'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d',
+  //         '',
   //         123
   //       ]
   //     }
@@ -92,7 +157,7 @@ async function handleSubmit() {
   const result = await send(props.space, 'vote', {
     proposal: props.proposal,
     choice: props.selectedChoices,
-    vp: demoVP
+    vp: selectedVC.value
   });
   console.log('Result', result);
   if (result.id) {
@@ -105,19 +170,36 @@ async function handleSubmit() {
 }
 
 watch(
-  () => [props.open, web3Account.value],
+  () => [selectedVC.value],
+  async () => {
+    if (selectedVC.value) {
+      generatedVP.value = await getVP();
+
+      if (!generatedVP.value) selectedVC.value = null;
+    }
+  }
+);
+
+watch(
+  () => [props.open, web3Account.value, selectedVC.value, generatedVP.value],
   async () => {
     if (props.open === false) return;
     vpLoading.value = true;
     vpLoadingFailed.value = false;
     try {
-      const response = await getPower(
-        props.space,
-        web3Account.value,
-        props.proposal
-      );
-      vp.value = response.totalScore;
-      vpByStrategy.value = response.scoresByStrategy;
+      vcs.value = await getVCs();
+      if (selectedVC.value && generatedVP.value) {
+        const response = await getPower(
+          props.space,
+          web3Account.value,
+          props.proposal,
+          selectedVC.value
+        );
+        vp.value = response.totalScore;
+        vpByStrategy.value = response.scoresByStrategy;
+      } else {
+        vp.value = 0;
+      }
     } catch (e) {
       vpLoadingFailed.value = true;
       console.log(e);
@@ -195,6 +277,22 @@ watch(
             <BaseIcon name="info" size="24" class="text-skin-text" />
           </BaseLink>
         </div>
+        <div class="flex">
+          <span class="mr-1 flex-auto text-skin-text">VP:</span>
+          <select
+            id="select"
+            v-model="selectedVC"
+            class="input w-full text-center"
+          >
+            <option
+              v-for="vc in vcs"
+              :key="vc.credentialSubject.id"
+              :value="vc"
+            >
+              {{ vc.credentialSubject.achievement }}
+            </option>
+          </select>
+        </div>
         <div v-if="vpLoadingFailed" class="mt-3">{{ t('vpError') }}</div>
       </BaseBlock>
     </div>
@@ -206,7 +304,7 @@ watch(
       </div>
       <div class="float-left w-2/4 pl-2">
         <BaseButton
-          :disabled="vp === 0 || clientLoading"
+          :disabled="vp === 0 || clientLoading || selectedVC === null"
           :loading="clientLoading"
           type="submit"
           class="w-full"
