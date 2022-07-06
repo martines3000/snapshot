@@ -84,10 +84,16 @@ export const getVP = async () => {
         SNAP_ID,
         {
           method: 'getVP',
-          params: [0, DOMAIN, 'key-123']
+          params: [
+            0,
+            'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d',
+            'key123'
+          ]
+          // params: [0, DOMAIN, 'key-123']
         }
       ]
     });
+
     return res.data;
   } catch (err) {
     return null;
