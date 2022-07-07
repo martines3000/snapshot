@@ -69,7 +69,9 @@ watch(
   () => [selectedVC.value],
   async () => {
     if (selectedVC.value) {
-      generatedVP.value = await getVP();
+      const index = vcs.value.findIndex(vc => vc === selectedVC.value);
+      if (index === -1) return;
+      generatedVP.value = await getVP(index);
       console.log('here');
       console.log(generatedVP.value);
       if (!generatedVP.value) selectedVC.value = null;

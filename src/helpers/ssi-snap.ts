@@ -76,7 +76,8 @@ export const getVCs = async () => {
   }
 };
 
-export const getVP = async () => {
+// FIXME: Need a better way to get specific VP
+export const getVP = async (index: number) => {
   try {
     const res = await window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -85,11 +86,10 @@ export const getVP = async () => {
         {
           method: 'getVP',
           params: [
-            0,
+            index,
             'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d',
             'key123'
           ]
-          // params: [0, DOMAIN, 'key-123']
         }
       ]
     });

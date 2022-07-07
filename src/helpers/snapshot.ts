@@ -59,8 +59,9 @@ export async function getProposal(id) {
 
 export async function getResults(space, proposal, votes) {
   console.log('[score] getResults');
+  console.log(votes);
   const voters = votes.map(vote => vote.voter);
-  const vps = votes.map(vote => vote.vps);
+  const vps = votes.map(vote => vote.metadata.vp);
   const strategies = proposal.strategies ?? space.strategies;
   /* Get scores */
   if (proposal.state !== 'pending') {
