@@ -575,6 +575,11 @@
     "title": "Track proposals for {spaceName}",
     "text": "Receive notifications every time a new proposal is created or ends"
   },
+  "did": {
+    "issuer": "Verifiable Credential Issuer",
+    "vcSchema": "Verifiable Credential Schema",
+    "vcRequirement": "Verifiable Credential Requirement"
+  },
   "timeUnits": {
     "second": "1 second | {n} seconds",
     "minute": "1 minute | {n} minutes",

@@ -2,6 +2,7 @@ import voting from '@snapshot-labs/snapshot.js/src/voting';
 import { apolloClient } from '@/helpers/apollo';
 import { PROPOSAL_QUERY, VOTES_QUERY } from '@/helpers/queries';
 import cloneDeep from 'lodash/cloneDeep';
+import { getScores } from '@snapshot-labs/snapshot.js/src/utils';
 
 export async function getProposalVotes(
   proposalId: string,
@@ -63,18 +64,34 @@ export async function getResults(space, proposal, votes) {
   const voters = votes.map(vote => vote.voter);
   const vps = votes.map(vote => vote.metadata.vp);
   const strategies = proposal.strategies ?? space.strategies;
+
   /* Get scores */
   if (proposal.state !== 'pending') {
     console.time('getProposal.scores');
-    const scores = await getScores(
-      space.id,
-      strategies,
-      proposal.network,
-      voters,
-      vps,
-      parseInt(proposal.snapshot),
-      import.meta.env.VITE_SCORES_URL + '/api/scores'
-    );
+    let scores;
+
+    // DID PLUGIN
+    if (Object.keys(proposal.plugins).includes('did')) {
+      scores = await getScoresDID(
+        space.id,
+        strategies,
+        proposal.network,
+        voters,
+        vps,
+        parseInt(proposal.snapshot),
+        import.meta.env.VITE_SCORES_URL + '/api/scores'
+      );
+    } else {
+      scores = await getScores(
+        space.id,
+        strategies,
+        proposal.network,
+        voters,
+        parseInt(proposal.snapshot),
+        import.meta.env.VITE_SCORES_URL + '/api/scores'
+      );
+    }
+
     console.timeEnd('getProposal.scores');
     console.log('Got scores');
 
@@ -101,18 +118,33 @@ export async function getResults(space, proposal, votes) {
   return { votes, results };
 }
 
-export async function getPower(space, address, proposal, vp) {
+export async function getPower(space, address, proposal, vp = null) {
   console.log('[score] getPower');
   const strategies = proposal.strategies ?? space.strategies;
-  const scores: any = await getScores(
-    space.id,
-    strategies,
-    proposal.network,
-    [address],
-    [vp],
-    parseInt(proposal.snapshot),
-    import.meta.env.VITE_SCORES_URL + '/api/scores'
-  );
+
+  let scores;
+
+  // DID PLUGIN
+  if (Object.keys(proposal.plugins).includes('did')) {
+    scores = await getScoresDID(
+      space.id,
+      strategies,
+      proposal.network,
+      [address],
+      [vp],
+      parseInt(proposal.snapshot),
+      import.meta.env.VITE_SCORES_URL + '/api/scores'
+    );
+  } else {
+    scores = await getScores(
+      space.id,
+      strategies,
+      proposal.network,
+      [address],
+      parseInt(proposal.snapshot),
+      import.meta.env.VITE_SCORES_URL + '/api/scores'
+    );
+  }
 
   console.log('scores:');
   console.log(scores);
@@ -127,8 +159,8 @@ export async function getPower(space, address, proposal, vp) {
   };
 }
 
-// FIXME: Changed fucntion from snapshot.js library
-export async function getScores(
+// FIXME: Modified function from snapshot.js
+export async function getScoresDID(
   space: string,
   strategies: any[],
   network: string,

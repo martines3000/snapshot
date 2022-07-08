@@ -48,13 +48,22 @@ const selectedVC = ref(null);
 const generatedVP = ref(null);
 
 async function handleSubmit() {
-  console.log(generatedVP.value);
-  // FIXME
-  const result = await send(props.space, 'vote', {
-    proposal: props.proposal,
-    choice: props.selectedChoices,
-    vp: generatedVP.value
-  });
+  let result;
+
+  // DID PLUGIN
+  if (Object.keys(props.proposal.plugins).includes('did')) {
+    result = await send(props.space, 'vote', {
+      proposal: props.proposal,
+      choice: props.selectedChoices,
+      vp: generatedVP.value
+    });
+  } else {
+    result = await send(props.space, 'vote', {
+      proposal: props.proposal,
+      choice: props.selectedChoices
+    });
+  }
+
   console.log('Result', result);
   if (result.id) {
     notify(['green', t('notify.voteSuccessful')]);
@@ -72,8 +81,7 @@ watch(
       const index = vcs.value.findIndex(vc => vc === selectedVC.value);
       if (index === -1) return;
       generatedVP.value = await getVP(index);
-      console.log('here');
-      console.log(generatedVP.value);
+
       if (!generatedVP.value) selectedVC.value = null;
     }
   }
@@ -86,18 +94,32 @@ watch(
     vpLoading.value = true;
     vpLoadingFailed.value = false;
     try {
-      vcs.value = await getVCs();
-      if (selectedVC.value && generatedVP.value) {
-        const response = await getPower(
+      let response;
+      // DID PLUGIN
+      if (Object.keys(props.proposal.plugins).includes('did')) {
+        vcs.value = await getVCs();
+        if (selectedVC.value && generatedVP.value) {
+          response = await getPower(
+            props.space,
+            web3Account.value,
+            props.proposal,
+            generatedVP.value
+          );
+
+          vp.value = response.totalScore;
+          vpByStrategy.value = response.scoresByStrategy;
+        } else {
+          vp.value = 0;
+        }
+      } else {
+        response = await getPower(
           props.space,
           web3Account.value,
-          props.proposal,
-          generatedVP.value
+          props.proposal
         );
+
         vp.value = response.totalScore;
         vpByStrategy.value = response.scoresByStrategy;
-      } else {
-        vp.value = 0;
       }
     } catch (e) {
       vpLoadingFailed.value = true;
@@ -176,7 +198,10 @@ watch(
             <BaseIcon name="info" size="24" class="text-skin-text" />
           </BaseLink>
         </div>
-        <div class="flex">
+        <div
+          v-if="Object.keys(props.proposal.plugins).includes('did')"
+          class="flex"
+        >
           <span class="mr-1 flex-auto text-skin-text">VP:</span>
           <select
             id="select"
@@ -187,6 +212,7 @@ watch(
               v-for="vc in vcs"
               :key="vc.credentialSubject.id"
               :value="vc"
+              class="vcOption"
             >
               {{ vc.credentialSubject.achievement }}
             </option>
@@ -216,3 +242,10 @@ watch(
     </template>
   </BaseModal>
 </template>
+
+<style scoped>
+.vcOption {
+  background-color: #211f24;
+  color: #fff;
+}
+</style>

@@ -1,0 +1,11 @@
+{
+  "name": "DID Plugin",
+  "description": "DID Plugin by BC Lab:UM",
+  "version": "0.0.1",
+  "author": "BC Lab:UM",
+  "website": "https://example.si",
+  "defaults": {
+    "space": {},
+    "proposal": {}
+  }
+}
