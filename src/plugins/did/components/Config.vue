@@ -4,9 +4,9 @@ import { ref, reactive, computed, watch } from 'vue';
 const props = defineProps(['modelValue', 'proposal']);
 const emit = defineEmits(['update:modelValue']);
 const input = reactive(props.modelValue);
-// const isValid = computed(() => {
-//   return ((input.issuer && input.vcSchema) || input === {});
-// });
+const isValid = computed(() => {
+  return (input.issuer && input.vcSchema) || input === {};
+});
 
 watch(input, () => {
   emit('update:modelValue', input);

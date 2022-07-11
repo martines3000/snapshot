@@ -229,7 +229,12 @@ watch(
       </div>
       <div class="float-left w-2/4 pl-2">
         <BaseButton
-          :disabled="vp === 0 || clientLoading || selectedVC === null"
+          :disabled="
+            vp === 0 ||
+            clientLoading ||
+            (Object.keys(props.proposal.plugins).includes('did') &&
+              selectedVC === null)
+          "
           :loading="clientLoading"
           type="submit"
           class="w-full"
