@@ -112,9 +112,9 @@ async function loadResults() {
     loadingResultsFailed.value = true;
   } else if (proposal.value.scores_state === 'final' || showPending) {
     results.value = {
-      resultsByVoteBalance: proposal.value.scores,
-      resultsByStrategyScore: proposal.value.scores_by_strategy,
-      sumOfResultsBalance: proposal.value.scores_total
+      scores: proposal.value.scores,
+      scoresByStrategy: proposal.value.scores_by_strategy,
+      scoresTotal: proposal.value.scores_total
     };
     loadedResults.value = true;
     loadingResultsFailed.value = false;
@@ -264,8 +264,7 @@ const truncateMarkdownBody = computed(() => {
   <TheLayout v-bind="$attrs">
     <template #content-left>
       <div class="mb-3 px-3 md:px-0">
-        <a
-          class="text-skin-text"
+        <ButtonBack
           @click="
             browserHasHistory?.includes('timeline')
               ? $router.go(-1)
@@ -273,10 +272,7 @@ const truncateMarkdownBody = computed(() => {
                   domain ? { path: '/' } : { name: 'spaceProposals' }
                 )
           "
-        >
-          <BaseIcon name="back" size="22" class="align-middle" />
-          {{ $t('back') }}
-        </a>
+        />
       </div>
       <div class="px-3 md:px-0">
         <template v-if="proposal">
@@ -379,7 +375,7 @@ const truncateMarkdownBody = computed(() => {
             <div
               class="overflow-hidden"
               :class="{
-                'h-[360px]': !showFullMarkdownBody && truncateMarkdownBody,
+                'h-[420px]': !showFullMarkdownBody && truncateMarkdownBody,
                 'mb-[92px]': showFullMarkdownBody,
                 'mb-[56px]': !showFullMarkdownBody
               }"
@@ -511,11 +507,10 @@ const truncateMarkdownBody = computed(() => {
           @retry="loadProposal()"
         />
         <ProposalResults
-          v-else-if="results"
           :loaded="loadedResults"
           :space="space"
           :proposal="proposal"
-          :results="results"
+          :results="(results as Results)"
           :strategies="strategies"
         />
         <PluginProposalSidebar

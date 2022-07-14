@@ -24,6 +24,7 @@
   "space": "Space",
   "spaces": "Spaces",
   "verifiedSpace": "Verified space",
+  "warningSpace": "This is not an official space, proceed with caution!",
   "version": "Version",
   "timeline": "Timeline",
   "ended": "ended",
@@ -292,6 +293,7 @@
     },
     "strategiesList": "Strategies",
     "addStrategy": "Add strategy",
+    "testInPlayground": "Test in playground",
 
     "admins": {
       "label": "Admins",
@@ -333,9 +335,16 @@
     "domain": {
       "label": "Domain name",
       "placeholder": "e.g. vote.balancer.fi",
-      "info": "To setup a custom domain you aditionally need to open a pull request on github. {docs}"
+      "info": "To setup a custom domain you additionally need to open a pull request on github. {docs}"
     },
     "skin": "Skin",
+
+    "treasuries": {
+      "label": "Treasuries",
+      "add": "Add treasury",
+      "edit": "Edit treasury",
+      "information": "Add treasuries of your organization to show them in your space."
+    },
 
     "addPlugin": "Add plugin",
     "editPlugin": "Edit plugin",
@@ -346,6 +355,7 @@
     "chooseExistingEns": "Choose one of your existing ENS domains to create a space with:",
     "useSingleExistingEns": "Use your existing ENS domain:",
     "orReigsterNewEns": "Or register a new domain:",
+    "demoTestnetEnsMessage": "To create a test space you need an ENS domain on {network}.",
     "toCreateASpace": "To create a space, you first need an ENS domain. Enter one below and follow the ENS registration instructions.",
     "createASpace": "Create a space",
     "registerEnsButton": "Register",
@@ -568,7 +578,8 @@
         "settings": "{space} Settings"
       },
       "strategy": "{key} strategy",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ranking": "Ranking"
     }
   },
   "hal": {
@@ -594,5 +605,18 @@
     "switchNetworkToNetwork": "To continue, you need to change the network in your wallet to {network}.",
     "switchToNetwork": "Switch to {network}",
     "goToDemoSite": "Go to demo website"
+  },
+  "treasury": {
+    "title": "Treasury",
+    "wallets": {
+      "title": "Wallets",
+      "empty": "This space doesn't have a treasury yet",
+      "addTreasury": "Add a treasury"
+    },
+    "assets": {
+      "title": "Assets",
+      "empty": "There are no assets in this contract"
+    },
+    "24hChange": "24h change"
   }
 }

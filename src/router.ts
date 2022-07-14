@@ -8,6 +8,7 @@ import PlaygroundView from '@/views/PlaygroundView.vue';
 import SetupView from '@/views/SetupView.vue';
 import StrategyView from '@/views/StrategyView.vue';
 import TimelineView from '@/views/TimelineView.vue';
+import RankingView from '@/views/RankingView.vue';
 
 import ProfileView from '@/views/ProfileView.vue';
 import ProfileAbout from '@/views/ProfileAbout.vue';
@@ -19,6 +20,7 @@ import SpaceProposal from '@/views/SpaceProposal.vue';
 import SpaceCreate from '@/views/SpaceCreate.vue';
 import SpaceSettings from '@/views/SpaceSettings.vue';
 import SpaceAbout from '@/views/SpaceAbout.vue';
+import SpaceTreasury from './views/SpaceTreasury.vue';
 
 // The frontend shows all spaces or just a single one, when being accessed
 // through that space's custom domain.
@@ -41,7 +43,13 @@ const spaceRoutes = [
   {
     path: 'create/:step?/:sourceProposal?',
     name: 'spaceCreate',
-    component: SpaceCreate
+    component: SpaceCreate,
+    beforeEnter: to => {
+      // set step to 1 if it is not set
+      if (!to.params.step) {
+        to.params.step = 1;
+      }
+    }
   },
 
   {
@@ -53,6 +61,11 @@ const spaceRoutes = [
     path: 'settings/:sourceSpace?',
     name: 'spaceSettings',
     component: SpaceSettings
+  },
+  {
+    path: 'treasury/:wallet?',
+    name: 'spaceTreasury',
+    component: SpaceTreasury
   }
 ];
 
@@ -106,6 +119,7 @@ if (domain) {
     { path: '/delegate/:key?/:to?', name: 'delegate', component: DelegateView },
     { path: '/timeline', name: 'timeline', component: TimelineView },
     { path: '/explore', name: 'explore', component: TimelineView },
+    { path: '/ranking', name: 'ranking', component: RankingView },
     {
       path: '/playground/:name',
       name: 'playground',
@@ -122,7 +136,13 @@ if (domain) {
       path: '/:key',
       name: 'space',
       component: SpaceView,
-      children: spaceRoutes
+      children: spaceRoutes,
+      beforeEnter: to => {
+        // Make sure key is lowercase
+        if (to.params.key) {
+          to.params.key = to.params.key.toLowerCase();
+        }
+      }
     }
   );
 }
@@ -154,5 +174,7 @@ const router = createRouter({
     return { top: 0 };
   }
 });
+
+export { routes };
 
 export default router;

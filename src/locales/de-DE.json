@@ -24,6 +24,7 @@
   "space": "Bereiche",
   "spaces": "Bereiche",
   "verifiedSpace": "Verifizierter Space",
+  "warningSpace": "This is not an official space, proceed with caution!",
   "version": "Version",
   "timeline": "Timeline",
   "ended": "beendet",
@@ -273,10 +274,10 @@
       "information": "Users will be required to accept these terms once before they can create a proposal or cast a vote."
     },
     "hideSpace": "Raum auf der Startseite ausblenden",
-    "links": "Links",
+    "links": "Social accounts",
     "website": "Website",
     "strategies": {
-      "label": "Strategie(s)",
+      "label": "Voting strategy",
       "information": "Strategies are used to determine voting power or whether a user is eligible to create a proposal."
     },
     "network": {
@@ -287,7 +288,9 @@
       "label": "Symbol",
       "information": "The default symbol used for this space, usually the token symbol i.e. BAL for Balancer."
     },
+    "strategiesList": "Strategies",
     "addStrategy": "Strategie hinzufügen",
+    "testInPlayground": "Test in playground",
     "admins": {
       "label": "Admins",
       "information": "Admins are able to modify the space settings and manage the space's proposals."
@@ -325,9 +328,15 @@
     "domain": {
       "label": "Domain name",
       "placeholder": "e.g. vote.balancer.fi",
-      "info": "To setup a custom domain you aditionally need to open a pull request on github. {docs}"
+      "info": "To setup a custom domain you additionally need to open a pull request on github. {docs}"
     },
     "skin": "Skin",
+    "treasuries": {
+      "label": "Treasuries",
+      "add": "Add treasury",
+      "edit": "Edit treasury",
+      "information": "Add treasuries of your organization to show them in your space."
+    },
     "addPlugin": "Plugin hinzufügen",
     "editPlugin": "Plugin bearbeiten",
     "pluginParameters": "Plugin Parameter"
@@ -337,6 +346,7 @@
     "chooseExistingEns": "Choose one of your existing ENS domains to create a space with:",
     "useSingleExistingEns": "Use your existing ENS domain:",
     "orReigsterNewEns": "Or register a new domain:",
+    "demoTestnetEnsMessage": "To create a test space you need an ENS domain on {network}.",
     "toCreateASpace": "To create a space, you first need an ENS domain. Enter one below and follow the ENS registration instructions.",
     "createASpace": "Bereich erstellen",
     "registerEnsButton": "Register",
@@ -558,7 +568,8 @@
         "settings": "{space} Settings"
       },
       "strategy": "{key} strategy",
-      "delegate": "Delegate"
+      "delegate": "Delegate",
+      "ranking": "Ranking"
     }
   },
   "hal": {
@@ -579,5 +590,18 @@
     "switchNetworkToNetwork": "To continue, you need to change the network in your wallet to {network}.",
     "switchToNetwork": "Switch to {network}",
     "goToDemoSite": "Go to demo website"
+  },
+  "treasury": {
+    "title": "Treasury",
+    "wallets": {
+      "title": "Wallets",
+      "empty": "This space doesn't have a treasury yet",
+      "addTreasury": "Add a treasury"
+    },
+    "assets": {
+      "title": "Assets",
+      "empty": "There are no assets in this contract"
+    },
+    "24hChange": "24h change"
   }
 }

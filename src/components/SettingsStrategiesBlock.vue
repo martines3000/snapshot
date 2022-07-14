@@ -6,7 +6,7 @@ import schemas from '@snapshot-labs/snapshot.js/src/schemas';
 
 const props = defineProps<{
   form: { network: string; symbol: string; strategies: SpaceStrategy[] };
-  getErrorMessage: (field: string) => string;
+  getErrorMessage: (field: string) => { message: string; push: boolean };
 }>();
 
 const emit = defineEmits(['updateStrategies', 'updateNetwork', 'updateSymbol']);
@@ -58,6 +58,7 @@ function handleSubmitStrategy(strategy) {
     <ContainerParallelInput class="mb-4 w-full">
       <ComboboxNetwork
         :network="form.network"
+        :information="$t('settings.network.information')"
         @select="value => emit('updateNetwork', value)"
       />
       <BaseInput
