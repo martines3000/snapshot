@@ -24,6 +24,7 @@
   "space": "空间",
   "spaces": "空间",
   "verifiedSpace": "已认证的空间",
+  "warningSpace": "这不是一个官方空间，请谨慎行事！",
   "version": "版本",
   "timeline": "时间线",
   "ended": "已结束",
@@ -273,10 +274,10 @@
       "information": "用户必须先接受这些条款才能创建提案或投票。"
     },
     "hideSpace": "从主页隐藏空间",
-    "links": "链接",
+    "links": "社交账户",
     "website": "网站",
     "strategies": {
-      "label": "策略",
+      "label": "投票策略",
       "information": "策略用于确定投票权或用户是否有资格创建提案。"
     },
     "network": {
@@ -287,7 +288,9 @@
       "label": "符号",
       "information": "此空间使用的默认符号，通常是代币符号，例如BAL表示Balancer这一代币。"
     },
+    "strategiesList": "策略",
     "addStrategy": "添加策略",
+    "testInPlayground": "在playground中测试",
     "admins": {
       "label": "管理员",
       "information": "管理员能够修改空间设置和管理空间提案。"
@@ -325,9 +328,15 @@
     "domain": {
       "label": "域名",
       "placeholder": "例如 vote.balancer.fi",
-      "info": "要设置一个自定义域名，您需要在github上开启一个pull request。 {docs}"
+      "info": "要设置一个自定义域名，您另外需要在github上开启一个pull request。 docs"
     },
     "skin": "皮肤",
+    "treasuries": {
+      "label": "金库",
+      "add": "添加金库",
+      "edit": "编辑金库",
+      "information": "为您的您组织添加金库以在您的空间中展示它们。"
+    },
     "addPlugin": "添加插件",
     "editPlugin": "编辑插件",
     "pluginParameters": "插件参数"
@@ -337,6 +346,7 @@
     "chooseExistingEns": "选择您现有的一个ENS域名来创建空间：",
     "useSingleExistingEns": "使用您现有的ENS域名：",
     "orReigsterNewEns": "或者注册一个新的域名：",
+    "demoTestnetEnsMessage": "若要创建测试空间，您需要在 network 上的 ENS 域名。",
     "toCreateASpace": "要创建空间，您首先需要一个ENS域名。在下面输入一个，并按照ENS的注册说明进行操作。",
     "createASpace": "创建空间",
     "registerEnsButton": "注册",
@@ -558,7 +568,8 @@
         "settings": "{space} 设置"
       },
       "strategy": "{key} 策略",
-      "delegate": "委托"
+      "delegate": "委托",
+      "ranking": "排名"
     }
   },
   "hal": {
@@ -579,5 +590,18 @@
     "switchNetworkToNetwork": "若要继续，您需要将钱包中的网络更改为 {network}。",
     "switchToNetwork": "切换到 {network}",
     "goToDemoSite": "前往演示网站"
+  },
+  "treasury": {
+    "title": "金库",
+    "wallets": {
+      "title": "钱包",
+      "empty": "此空间还没有金库",
+      "addTreasury": "添加一个金库"
+    },
+    "assets": {
+      "title": "资产",
+      "empty": "该合约中没有资产"
+    },
+    "24hChange": "24小时变化"
   }
 }

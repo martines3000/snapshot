@@ -24,6 +24,7 @@
   "space": "Spaţiu",
   "spaces": "Spaţii",
   "verifiedSpace": "Spațiu verificat",
+  "warningSpace": "This is not an official space, proceed with caution!",
   "version": "Versiune",
   "timeline": "Cronologie",
   "ended": "ended",
@@ -273,10 +274,10 @@
       "information": "Users will be required to accept these terms once before they can create a proposal or cast a vote."
     },
     "hideSpace": "Ascunde spațiu de pe pagina principală",
-    "links": "Links",
+    "links": "Social accounts",
     "website": "Website",
     "strategies": {
-      "label": "Strategie(s)",
+      "label": "Voting strategy",
       "information": "Strategies are used to determine voting power or whether a user is eligible to create a proposal."
     },
     "network": {
@@ -287,7 +288,9 @@
       "label": "Symbol",
       "information": "The default symbol used for this space, usually the token symbol i.e. BAL for Balancer."
     },
+    "strategiesList": "Strategies",
     "addStrategy": "Adaugă strategie",
+    "testInPlayground": "Test in playground",
     "admins": {
       "label": "Admins",
       "information": "Admins are able to modify the space settings and manage the space's proposals."
@@ -325,9 +328,15 @@
     "domain": {
       "label": "Domain name",
       "placeholder": "e.g. vote.balancer.fi",
-      "info": "To setup a custom domain you aditionally need to open a pull request on github. {docs}"
+      "info": "To setup a custom domain you additionally need to open a pull request on github. {docs}"
     },
     "skin": "Skin",
+    "treasuries": {
+      "label": "Treasuries",
+      "add": "Add treasury",
+      "edit": "Edit treasury",
+      "information": "Add treasuries of your organization to show them in your space."
+    },
     "addPlugin": "Adaugă extensie",
     "editPlugin": "Modifică extensie",
     "pluginParameters": "Parametrii extensie"
@@ -337,6 +346,7 @@
     "chooseExistingEns": "Alege unul dintre domeniile tale ENS existente pentru a crea un spațiu:",
     "useSingleExistingEns": "Utilizează domeniul tău ENS existent:",
     "orReigsterNewEns": "Sau înregistrează un nou domeniu:",
+    "demoTestnetEnsMessage": "To create a test space you need an ENS domain on {network}.",
     "toCreateASpace": "Pentru a crea un spațiu, ai nevoie mai întâi de un domeniu ENS. Introdu unul mai jos și urmează instrucțiunile de înregistrare ENS.",
     "createASpace": "Crează un spațiu",
     "registerEnsButton": "Înregistrează-te",
@@ -558,7 +568,8 @@
         "settings": "Setări {space}"
       },
       "strategy": "Strategie {key}",
-      "delegate": "Deleghează"
+      "delegate": "Deleghează",
+      "ranking": "Ranking"
     }
   },
   "hal": {
@@ -579,5 +590,18 @@
     "switchNetworkToNetwork": "To continue, you need to change the network in your wallet to {network}.",
     "switchToNetwork": "Switch to {network}",
     "goToDemoSite": "Go to demo website"
+  },
+  "treasury": {
+    "title": "Treasury",
+    "wallets": {
+      "title": "Wallets",
+      "empty": "This space doesn't have a treasury yet",
+      "addTreasury": "Add a treasury"
+    },
+    "assets": {
+      "title": "Assets",
+      "empty": "There are no assets in this contract"
+    },
+    "24hChange": "24h change"
   }
 }

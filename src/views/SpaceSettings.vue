@@ -11,6 +11,7 @@ import { getSpaceUri, clone } from '@snapshot-labs/snapshot.js/src/utils';
 import { useExtendedSpaces } from '@/composables/useExtendedSpaces';
 import { ExtendedSpace } from '@/helpers/interfaces';
 import { useSpaceSettingsForm } from '@/composables/useSpaceSettingsForm';
+import { useTreasury } from '@/composables/useTreasury';
 
 const props = defineProps<{
   space: ExtendedSpace;
@@ -22,6 +23,7 @@ const { web3Account } = useWeb3();
 const { send, clientLoading } = useClient();
 const { reloadSpace } = useExtendedSpaces();
 const { form, validate, formatSpace, getErrorMessage } = useSpaceSettingsForm();
+const { resetTreasuryAssets } = useTreasury();
 const notify: any = inject('notify');
 
 const currentSettings = ref({});
@@ -71,21 +73,16 @@ const isSpaceAdmin = computed(() => {
 });
 
 async function handleSubmit() {
-  if (isValid.value) {
-    const formattedForm = formatSpace(form.value);
-    const result = await send(
-      { id: props.space.id },
-      'settings',
-      formattedForm
-    );
-    console.log('Result', result);
-    if (result.id) {
-      notify(['green', t('notify.saved')]);
-      await clearStampCache(props.space.id);
-      reloadSpace(props.space.id);
-    }
-  } else {
-    console.log('Invalid schema', validate.value);
+  if (!isValid.value) return console.log('Invalid schema', validate.value);
+
+  const formattedForm = formatSpace(form.value);
+  const result = await send({ id: props.space.id }, 'settings', formattedForm);
+  console.log('Result', result);
+  if (result.id) {
+    notify(['green', t('notify.saved')]);
+    resetTreasuryAssets();
+    await clearStampCache(props.space.id);
+    reloadSpace(props.space.id);
   }
 }
 
@@ -150,9 +147,8 @@ async function handleSetRecord() {
   <TheLayout v-bind="$attrs">
     <template #content-left>
       <div class="mb-3 px-4 md:px-0">
-        <router-link :to="{ name: 'spaceProposals' }" class="text-skin-text">
-          <BaseIcon name="back" size="22" class="!align-middle" />
-          {{ $t('back') }}
+        <router-link :to="{ name: 'spaceProposals' }">
+          <ButtonBack />
         </router-link>
       </div>
       <div class="px-4 md:px-0">
@@ -200,13 +196,13 @@ async function handleSetRecord() {
           <SettingsAdminsBlock
             :admins="form.admins"
             :is-space-controller="isSpaceController"
-            :get-error-message="getErrorMessage"
+            :error="getErrorMessage('admins')"
             @update:admins="val => (form.admins = val)"
           />
 
           <SettingsAuthorsBlock
             :members="form.members"
-            :get-error-message="getErrorMessage"
+            :error="getErrorMessage('members')"
             @update:members="val => (form.members = val)"
           />
 
@@ -230,6 +226,11 @@ async function handleSetRecord() {
             v-model:domain="form.domain"
             v-model:skin="form.skin"
             :get-error-message="getErrorMessage"
+          />
+
+          <SettingsTreasuriesBlock
+            :treasuries="form.treasuries"
+            @update-treasuries="value => (form.treasuries = value)"
           />
 
           <SettingsPluginsBlock
