@@ -9,9 +9,14 @@ const msg = 'This is DID Plugin!';
 
 <template>
   <BaseBlock v-if="proposal.plugins?.did" :title="pluginIndex.did.name">
-    <div>Accepted issuer:</div>
-    <div>{{ proposal.plugins.did.issuer }}</div>
-    <div>Accepted schema:</div>
-    <div>{{ proposal.plugins.did.vcSchema }}</div>
+    <div :style="{ color: 'white' }">Accepted issuer:</div>
+    <div :style="{ wordWrap: 'break-word' }">
+      {{ proposal.plugins.did.issuer }}
+    </div>
+
+    <div :style="{ marginTop: '8px', color: 'white' }">Accepted schema:</div>
+    <div :style="{ wordWrap: 'break-word' }">
+      {{ proposal.plugins.did.vcSchema }}
+    </div>
   </BaseBlock>
 </template>

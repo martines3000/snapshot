@@ -78,6 +78,7 @@ export async function getResults(space, proposal, votes) {
         proposal.network,
         voters,
         vps,
+        proposal.plugins.did.issuer,
         parseInt(proposal.snapshot),
         import.meta.env.VITE_SCORES_URL + '/api/scores'
       );
@@ -132,6 +133,7 @@ export async function getPower(space, address, proposal, vp = null) {
       proposal.network,
       [address],
       [vp],
+      proposal.plugins.did.issuer,
       parseInt(proposal.snapshot),
       import.meta.env.VITE_SCORES_URL + '/api/scores'
     );
@@ -166,6 +168,7 @@ export async function getScoresDID(
   network: string,
   addresses: string[],
   vps: any[],
+  issuer: string,
   snapshot: number | string = 'latest',
   scoreApiUrl = 'https://score.snapshot.org/api/scores'
 ) {
@@ -176,9 +179,10 @@ export async function getScoresDID(
       snapshot,
       strategies,
       addresses,
-      vps
+      vps,
+      issuer
     };
-    console.log(params);
+
     const res = await fetch(scoreApiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

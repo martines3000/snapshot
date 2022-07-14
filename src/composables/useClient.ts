@@ -85,7 +85,7 @@ export function useClient() {
         proposal: payload.proposal.id,
         type: payload.proposal.type,
         choice: payload.choice,
-        metadata: { vp: payload.vp }
+        metadata: JSON.stringify({ vp: payload.vp })
       });
     } else if (type === 'delete-proposal') {
       return clientEIP712.cancelProposal(auth.web3, web3.value.account, {

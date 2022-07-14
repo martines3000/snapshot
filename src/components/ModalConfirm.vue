@@ -46,6 +46,7 @@ const symbols = computed(() =>
 const vcs = ref([]);
 const selectedVC = ref(null);
 const generatedVP = ref(null);
+const verifyingVP = ref(false);
 
 async function handleSubmit() {
   let result;
@@ -98,7 +99,8 @@ watch(
       // DID PLUGIN
       if (Object.keys(props.proposal.plugins).includes('did')) {
         vcs.value = await getVCs();
-        if (selectedVC.value && generatedVP.value) {
+        if (selectedVC.value && generatedVP.value && !verifyingVP.value) {
+          verifyingVP.value = true;
           response = await getPower(
             props.space,
             web3Account.value,
@@ -127,6 +129,7 @@ watch(
     } finally {
       vpLoaded.value = true;
       vpLoading.value = false;
+      verifyingVP.value = false;
     }
   }
 );
@@ -202,7 +205,7 @@ watch(
           v-if="Object.keys(props.proposal.plugins).includes('did')"
           class="flex"
         >
-          <span class="mr-1 flex-auto text-skin-text">VP:</span>
+          <span class="mr-1 flex-auto text-skin-text">VC:</span>
           <select
             id="select"
             v-model="selectedVC"
@@ -232,6 +235,7 @@ watch(
           :disabled="
             vp === 0 ||
             clientLoading ||
+            verifyingVP ||
             (Object.keys(props.proposal.plugins).includes('did') &&
               selectedVC === null)
           "
