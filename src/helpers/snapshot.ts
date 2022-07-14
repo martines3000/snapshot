@@ -98,9 +98,9 @@ export async function getResults(space, proposal, votes) {
 
     votes = votes
       .map((vote: any) => {
-        vote.scores = strategies.map(
-          (strategy, i) => scores[i][vote.voter] || 0
-        );
+        vote.scores = strategies.map((strategy, i) => {
+          return scores[i] && scores[i][vote.voter] ? scores[i][vote.voter] : 0;
+        });
         vote.balance = vote.scores.reduce((a, b: any) => a + b, 0);
         return vote;
       })
@@ -151,9 +151,9 @@ export async function getPower(space, address, proposal, vp = null) {
   console.log('scores:');
   console.log(scores);
 
-  const scoresByStrategy = strategies.map(
-    (strategy, i) => scores[i][address] || 0
-  );
+  const scoresByStrategy = strategies.map((strategy, i) => {
+    return scores[i] && scores[i][address] ? scores[i][address] : 0;
+  });
 
   return {
     scoresByStrategy,
