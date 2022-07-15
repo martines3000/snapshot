@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "scripts": {
     "dev": "vite --port=3000",
-    "build": "vite build",
+    "build": "vite build --base=/snapshot",
     "lint": "eslint \"./src/*/**/*.{js,ts,vue,json}\" --fix",
     "postinstall": "patch-package && husky install",
     "init-submodules": "git submodule update --init",
