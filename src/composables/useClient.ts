@@ -47,7 +47,6 @@ export function useClient() {
           payload
         );
       }
-      // FIXME
       return await sendEIP712(space, type, payload);
     } catch (e: any) {
       const errorMessage =
@@ -79,7 +78,6 @@ export function useClient() {
         plugins: JSON.stringify(plugins)
       });
     } else if (type === 'vote') {
-      // FIXME
       return clientEIP712.vote(auth.web3, web3.value.account, {
         space: space.id,
         proposal: payload.proposal.id,

@@ -161,7 +161,6 @@ export async function getPower(space, address, proposal, vp = null) {
   };
 }
 
-// FIXME: Modified function from snapshot.js
 export async function getScoresDID(
   space: string,
   strategies: any[],
