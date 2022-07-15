@@ -17,15 +17,12 @@ const getWalletSnaps = async (): Promise<GetSnapsResponse> => {
   })) as GetSnapsResponse;
 };
 
-export const isSnapInstalled = async (
-  snapOrigin: string,
-  version?: string
-): Promise<boolean> => {
+export const isSnapInstalled = async (version?: string): Promise<boolean> => {
   console.log(await getWalletSnaps());
   try {
     return !!Object.values(await getWalletSnaps()).find(
       permission =>
-        permission.id === snapOrigin &&
+        permission.id === SNAP_ID &&
         (!version || permission.version === version)
     );
   } catch (e) {

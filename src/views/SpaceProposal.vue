@@ -17,6 +17,7 @@ import { useIntl } from '@/composables/useIntl';
 import pending from '@/helpers/pending.json';
 import { ExtendedSpace, Proposal, Results } from '@/helpers/interfaces';
 import { useSpaceCreateForm } from '@/composables/useSpaceCreateForm';
+import { installSnap, isSnapInstalled } from '@/helpers/ssi-snap';
 
 const props = defineProps<{
   space: ExtendedSpace;
@@ -210,8 +211,13 @@ function selectFromShareDropdown(e) {
 
 const { profiles, loadProfiles } = useProfiles();
 
-watch(proposal, () => {
+watch(proposal, async () => {
   if (!proposal.value) return;
+  if (Object.keys(proposal.value.plugins).includes('did')) {
+    if (!(await isSnapInstalled())) {
+      await installSnap();
+    }
+  }
   loadProfiles([proposal.value.author]);
 });
 
