@@ -22,8 +22,8 @@ const update = form => {
       :proposal="proposal"
       :model-value="
         modelValue?.did || {
-          issuer: 'test',
-          vcSchema: 'testVC'
+          issuer: '',
+          vcSchema: ''
         }
       "
       @update:modelValue="update"
