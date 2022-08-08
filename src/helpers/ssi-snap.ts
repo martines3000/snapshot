@@ -53,20 +53,25 @@ export const installSnap = async () => {
   return false;
 };
 
-export const getVCs = async () => {
+export const getVCs = async (issuer: string) => {
   try {
     const response = await window.ethereum.request({
       method: 'wallet_invokeSnap',
       params: [
         SNAP_ID,
         {
-          method: 'getVCs'
+          method: 'getVCs',
+          params: [
+            {
+              issuer: issuer
+            }
+          ]
         }
       ]
     });
     console.log('response:');
     console.log(response);
-    return response.data;
+    return response.data.vcs;
   } catch (err) {
     console.error(err);
     return [];
@@ -74,7 +79,7 @@ export const getVCs = async () => {
 };
 
 // FIXME: Need a better way to get specific VP
-export const getVP = async (index: number) => {
+export const getVP = async (id: string) => {
   try {
     const res = await window.ethereum.request({
       method: 'wallet_invokeSnap',
@@ -83,7 +88,7 @@ export const getVP = async (index: number) => {
         {
           method: 'getVP',
           params: [
-            index,
+            id,
             'did:ethr:rinkeby:0x0241abd662da06d0af2f0152a80bc037f65a7f901160cfe1eb35ef3f0c532a2a4d',
             'key123'
           ]

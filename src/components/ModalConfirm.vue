@@ -79,10 +79,8 @@ watch(
   () => [selectedVC.value],
   async () => {
     if (selectedVC.value) {
-      const index = vcs.value.findIndex(vc => vc === selectedVC.value);
-      if (index === -1) return;
-      generatedVP.value = await getVP(index);
-
+      console.log(selectedVC);
+      generatedVP.value = await getVP(selectedVC.value);
       if (!generatedVP.value) selectedVC.value = null;
     }
   }
@@ -91,14 +89,9 @@ watch(
 watch(
   () => [props.open, web3Account.value, selectedVC.value, generatedVP.value],
   async () => {
-    if (props.open === false) return;
-    vpLoading.value = true;
-    vpLoadingFailed.value = false;
     try {
       let response;
-      // DID PLUGIN
       if (Object.keys(props.proposal.plugins).includes('did')) {
-        vcs.value = await getVCs();
         if (selectedVC.value && generatedVP.value && !verifyingVP.value) {
           verifyingVP.value = true;
           response = await getPower(
@@ -113,6 +106,39 @@ watch(
         } else {
           vp.value = 0;
         }
+      } else {
+        response = await getPower(
+          props.space,
+          web3Account.value,
+          props.proposal
+        );
+
+        vp.value = response.totalScore;
+        vpByStrategy.value = response.scoresByStrategy;
+      }
+    } catch (e) {
+      vpLoadingFailed.value = true;
+      console.log(e);
+    } finally {
+      vpLoaded.value = true;
+      vpLoading.value = false;
+      verifyingVP.value = false;
+    }
+  }
+);
+
+watch(
+  () => [props.open, web3Account.value],
+  async () => {
+    if (props.open === false) return;
+    vpLoading.value = true;
+    vpLoadingFailed.value = false;
+    try {
+      let response;
+      // DID PLUGIN
+      if (Object.keys(props.proposal.plugins).includes('did')) {
+        vcs.value = await getVCs(props.proposal.plugins.did.issuer);
+        console.log(vcs.value);
       } else {
         response = await getPower(
           props.space,
@@ -213,8 +239,8 @@ watch(
           >
             <option
               v-for="vc in vcs"
-              :key="vc.credentialSubject.id"
-              :value="vc"
+              :key="vc.key"
+              :value="vc.key"
               class="vcOption"
             >
               {{ vc.credentialSubject.achievement }}
