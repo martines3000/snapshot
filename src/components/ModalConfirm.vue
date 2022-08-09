@@ -7,12 +7,7 @@ import { useIntl } from '@/composables/useIntl';
 import { getPower } from '@/helpers/snapshot';
 import { useWeb3 } from '@/composables/useWeb3';
 import pending from '@/helpers/pending.json';
-import {
-  isSnapInstalled,
-  installSnap,
-  getVCs,
-  getVP
-} from '@/helpers/ssi-snap';
+import { enableSSISnap } from '@blockchain-lab-um/ssi-snap-connector';
 
 const { web3Account } = useWeb3();
 
@@ -80,7 +75,9 @@ watch(
   async () => {
     if (selectedVC.value) {
       console.log(selectedVC);
-      generatedVP.value = await getVP(selectedVC.value);
+      const snap = await enableSSISnap();
+      const api = await snap.getSSISnapApi();
+      generatedVP.value = await api.getVP(selectedVC.value);
       if (!generatedVP.value) selectedVC.value = null;
     }
   }
@@ -137,7 +134,9 @@ watch(
       let response;
       // DID PLUGIN
       if (Object.keys(props.proposal.plugins).includes('did')) {
-        vcs.value = await getVCs(props.proposal.plugins.did.issuer);
+        const snap = await enableSSISnap();
+        const api = await snap.getSSISnapApi();
+        vcs.value = await api.getVCs();
         console.log(vcs.value);
       } else {
         response = await getPower(

@@ -17,7 +17,7 @@ import { useIntl } from '@/composables/useIntl';
 import pending from '@/helpers/pending.json';
 import { ExtendedSpace, Proposal, Results } from '@/helpers/interfaces';
 import { useSpaceCreateForm } from '@/composables/useSpaceCreateForm';
-import { installSnap, isSnapInstalled } from '@/helpers/ssi-snap';
+import { enableSSISnap } from '@blockchain-lab-um/ssi-snap-connector';
 
 const props = defineProps<{
   space: ExtendedSpace;
@@ -214,9 +214,7 @@ const { profiles, loadProfiles } = useProfiles();
 watch(proposal, async () => {
   if (!proposal.value) return;
   if (Object.keys(proposal.value.plugins).includes('did')) {
-    if (!(await isSnapInstalled())) {
-      await installSnap();
-    }
+    await enableSSISnap();
   }
   loadProfiles([proposal.value.author]);
 });
